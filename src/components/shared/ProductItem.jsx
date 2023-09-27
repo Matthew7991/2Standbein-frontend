@@ -1,7 +1,9 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
+import { ShoppingCart } from "../../App"
 
 function ProductItem({ product, isAdmin }) {
   const [editing, setEditing] = useState(false)
+  const shoppingCartState = useContext(ShoppingCart)
 
   const toggleEditing = () => {
     setEditing((prev) => !prev)
@@ -27,6 +29,11 @@ function ProductItem({ product, isAdmin }) {
       event.target.reset()
       setEditing(false)
     }
+  }
+
+  const addToCart = () => {
+    shoppingCartState.setShoppingCart((prev) => [...prev, product._id])
+    console.log(shoppingCartState.shoppingCart)
   }
 
   return (
@@ -84,6 +91,7 @@ function ProductItem({ product, isAdmin }) {
           <p>{product.description}</p>
           <p>{product.price} €</p>
           <p>{product.stock}</p>
+          <button onClick={addToCart}>Add to Cart</button>
         </>
       )}
       {isAdmin && (

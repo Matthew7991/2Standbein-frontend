@@ -3,30 +3,37 @@ import "./App.css"
 import Admin from "./components/pages/Admin"
 import Protected from "./components/shared/Protected"
 import Home from "./components/pages/Home"
+import { createContext, useState } from "react"
+
+export const ShoppingCart = createContext([])
 
 function App() {
+  const [shoppingCart, setShoppingCart] = useState([])
+
   return (
     <>
-      <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-        <Route element={<Protected />}>
+      <ShoppingCart.Provider value={{ shoppingCart, setShoppingCart }}>
+        <Routes>
           <Route
-            path="/admin"
-            element={<Admin />}
+            path="/"
+            element={<Home />}
           />
-          <Route
-            path="/admin/orders"
-            element={<Admin />}
-          />
-          <Route
-            path="/admin/products"
-            element={<Admin />}
-          />
-        </Route>
-      </Routes>
+          <Route element={<Protected />}>
+            <Route
+              path="/admin"
+              element={<Admin />}
+            />
+            <Route
+              path="/admin/orders"
+              element={<Admin />}
+            />
+            <Route
+              path="/admin/products"
+              element={<Admin />}
+            />
+          </Route>
+        </Routes>
+      </ShoppingCart.Provider>
     </>
   )
 }
