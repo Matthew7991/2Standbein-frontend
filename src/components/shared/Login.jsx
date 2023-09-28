@@ -8,6 +8,7 @@ function Login() {
     event.preventDefault()
 
     const formData = new FormData(event.target)
+    console.log(formData)
 
     const response = await fetch(
       import.meta.env.VITE_SERVER_URL + "/api/login",
@@ -26,24 +27,38 @@ function Login() {
 
   return (
     <>
-      <form onSubmit={login}>
+      <form
+        onSubmit={login}
+        className="flex items-center gap-4">
         <div>
-          <label htmlFor="username">username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-          />
+          <div className="flex gap-2">
+            <label
+              className="flex-auto"
+              htmlFor="username">
+              Username:
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+            />
+          </div>
+          <div className="flex gap-2">
+            <label
+              className="flex-auto"
+              htmlFor="password">
+              Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+            />
+          </div>
         </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-          />
-        </div>
-        <button>Login</button>
+        <button className="bg-[#ffe81e] rounded-lg px-8 py-1 text-2xl font-medium">
+          Login
+        </button>
       </form>
     </>
   )

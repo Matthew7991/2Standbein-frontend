@@ -1,32 +1,17 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import Login from "../shared/Login"
+import { Reloading, ShoppingCart } from "../../App"
+import ProductList from "../shared/ProductList"
 import getProducts from "../../utilities/getProducts"
-import ProductItem from "../shared/ProductItem"
-import { ShoppingCart } from "../../App"
 
 function Home() {
-  const [products, setProducts] = useState([])
-  const [isAdmin, setIsAdmin] = useState(false)
   const shoppingCartState = useContext(ShoppingCart)
+  const [products, setProducts] = useState([])
+  const reloadContext = useContext(Reloading)
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data))
-  }, [])
-
-  useEffect(() => {
-    const authToken = async () => {
-      const response = await fetch(
-        import.meta.env.VITE_SERVER_URL + "/api/admin/auth",
-        {
-          headers: { authorization: "Bearer " + localStorage.getItem("token") },
-        }
-      )
-      if (response.ok) {
-        setIsAdmin(true)
-      }
-    }
-    authToken()
-  }, [])
+  }, [reloadContext.reload])
 
   const buyProducts = () => {
     const addOrder = async () => {
@@ -37,7 +22,7 @@ function Home() {
         { method: "POST" }
       )
       if (response.ok) {
-        shoppingCartState.setshoppingCart([])
+        shoppingCartState.setShoppingCart([])
       }
     }
     addOrder()
@@ -45,20 +30,25 @@ function Home() {
 
   return (
     <>
-      <Login />
-      <p>
-        Items in shopping Cart: {shoppingCartState.shoppingCart.length}
-      </p>{" "}
-      <button onClick={buyProducts}>Order</button>
-      <div>
-        {products.map((product) => (
-          <ProductItem
-            key={product._id}
-            product={product}
-            isAdmin={isAdmin}
-          />
-        ))}
-      </div>
+      <header className="flex justify-between">
+        <section className="flex items-center gap-4">
+          <p className="text-xl font-bold">
+            Items in shopping Cart:{" "}
+            <span className="text-orange-500">
+              {shoppingCartState.shoppingCart.length}
+            </span>
+          </p>
+          <button
+            className="bg-[#ffe81e] rounded-lg px-8 py-1 text-2xl font-medium"
+            onClick={buyProducts}>
+            Order
+          </button>
+        </section>
+        <Login />
+      </header>
+      <main className="flex flex-col gap-6">
+        <ProductList products={products} />
+      </main>
     </>
   )
 }

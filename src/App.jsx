@@ -6,33 +6,37 @@ import Home from "./components/pages/Home"
 import { createContext, useState } from "react"
 
 export const ShoppingCart = createContext([])
+export const Reloading = createContext(false)
 
 function App() {
   const [shoppingCart, setShoppingCart] = useState([])
+  const [reload, setReload] = useState(Reloading)
 
   return (
     <>
       <ShoppingCart.Provider value={{ shoppingCart, setShoppingCart }}>
-        <Routes>
-          <Route
-            path="/"
-            element={<Home />}
-          />
-          <Route element={<Protected />}>
+        <Reloading.Provider value={{ reload, setReload }}>
+          <Routes>
             <Route
-              path="/admin"
-              element={<Admin />}
+              path="/"
+              element={<Home />}
             />
-            <Route
-              path="/admin/orders"
-              element={<Admin />}
-            />
-            <Route
-              path="/admin/products"
-              element={<Admin />}
-            />
-          </Route>
-        </Routes>
+            <Route element={<Protected />}>
+              <Route
+                path="/admin"
+                element={<Admin />}
+              />
+              <Route
+                path="/admin/orders"
+                element={<Admin />}
+              />
+              <Route
+                path="/admin/products"
+                element={<Admin />}
+              />
+            </Route>
+          </Routes>
+        </Reloading.Provider>
       </ShoppingCart.Provider>
     </>
   )

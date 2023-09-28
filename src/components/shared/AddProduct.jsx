@@ -1,4 +1,5 @@
 import React from "react"
+import ProductForm from "./ProductForm"
 
 function AddProduct() {
   const addProduct = async (event) => {
@@ -22,49 +23,13 @@ function AddProduct() {
   }
 
   return (
-    <>
+    <section>
       <h2>Add Product</h2>
-      <form
-        onSubmit={addProduct}
-        className="grid grid-cols-2 gap-y-2">
-        <label htmlFor="title">title</label>
-        <input
-          className="border border-gray-200"
-          type="text"
-          name="title"
-          id="title"
-        />
-        <label htmlFor="category">category</label>
-        <input
-          className="border border-gray-200"
-          type="text"
-          name="category"
-          id="category"
-        />
-        <label htmlFor="description">description</label>
-        <textarea
-          className="border border-gray-200"
-          type="text"
-          name="description"
-          id="description"
-        />
-        <label htmlFor="price">price</label>
-        <input
-          className="border border-gray-200"
-          type="number"
-          name="price"
-          id="price"
-        />
-        <label htmlFor="stock">stock</label>
-        <input
-          className="border border-gray-200"
-          type="number"
-          name="stock"
-          id="stock"
-        />
-        <button>Add Product</button>
-      </form>
-    </>
+      <ProductForm
+        submitFunction={addProduct}
+        buttonText={"Add Product"}
+      />
+    </section>
   )
 }
 

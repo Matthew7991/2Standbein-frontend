@@ -1,9 +1,13 @@
 import React, { useContext, useState } from "react"
-import { ShoppingCart } from "../../App"
+import { Reloading, ShoppingCart } from "../../App"
+import ProductForm from "./ProductForm"
 
 function ProductItem({ product, isAdmin }) {
   const [editing, setEditing] = useState(false)
   const shoppingCartState = useContext(ShoppingCart)
+  const reloadContext = useContext(Reloading)
+
+  console.log(product)
 
   const toggleEditing = () => {
     setEditing((prev) => !prev)
@@ -26,7 +30,7 @@ function ProductItem({ product, isAdmin }) {
       }
     )
     if (response.ok) {
-      event.target.reset()
+      reloadContext.setReload((prev) => !prev)
       setEditing(false)
     }
   }
@@ -37,65 +41,48 @@ function ProductItem({ product, isAdmin }) {
   }
 
   return (
-    <article key={product._id}>
+    <article
+      key={product._id}
+      className="shadow-[0_0_8px_16px_#00000009]">
       {editing ? (
-        <form
-          onSubmit={updateProduct}
-          className="grid grid-cols-2 gap-y-2">
-          <label htmlFor="title">title</label>
-          <input
-            className="border border-gray-200"
-            type="text"
-            name="title"
-            id="title"
-            defaultValue={product.title}
-          />
-          <label htmlFor="category">category</label>
-          <input
-            className="border border-gray-200"
-            type="text"
-            name="category"
-            id="category"
-            defaultValue={product.category}
-          />
-          <label htmlFor="description">description</label>
-          <textarea
-            className="border border-gray-200"
-            type="text"
-            name="description"
-            id="description"
-            defaultValue={product.description}
-          />
-          <label htmlFor="price">price</label>
-          <input
-            className="border border-gray-200"
-            type="number"
-            name="price"
-            id="price"
-            defaultValue={product.price}
-          />
-          <label htmlFor="stock">stock</label>
-          <input
-            className="border border-gray-200"
-            type="number"
-            name="stock"
-            id="stock"
-            defaultValue={product.stock}
-          />
-          <button>Update Product</button>
-        </form>
+        <ProductForm
+          submitFunction={updateProduct}
+          buttonText={"Update Product"}
+          product={product}
+        />
       ) : (
-        <>
-          <h2>{product.title}</h2>
-          <p>{product.category}</p>
-          <p>{product.description}</p>
-          <p>{product.price} €</p>
-          <p>{product.stock}</p>
-          <button onClick={addToCart}>Add to Cart</button>
-        </>
+        <div className="flex items-start ">
+          <div className="">
+            <img
+              src={product.imgUrl}
+              alt=""
+              className="object-contain h-40"
+            />
+          </div>
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold">{product.title}</h2>
+            <p className="opacity-70">{product.category}</p>
+            <p>{product.description}</p>
+            <p
+              className={`${
+                product.stock <= 3 ? "text-red-600" : ""
+              } font-medium`}>
+              {product.stock} in Stock
+            </p>
+            <div className="flex gap-4">
+              <p className="text-2xl font-bold">{product.price} €</p>
+              <button
+                className="bg-[#ffe81e] rounded-full px-8 py-1 text-2xl font-medium"
+                onClick={addToCart}>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
       )}
       {isAdmin && (
         <button
+          className="px-8 py-1 text-2xl font-medium text-white bg-red-700 rounded-full "
           type="button"
           onClick={toggleEditing}>
           {editing ? "Cancel" : "Edit"}

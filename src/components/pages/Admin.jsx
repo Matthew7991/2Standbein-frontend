@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import AddProduct from "../shared/AddProduct"
-import getProducts from "../../utilities/getProducts"
 import { Link } from "react-router-dom"
 import OrderItem from "../shared/OrderItem"
 import getOrders from "../../utilities/orderFetches"
@@ -8,9 +7,6 @@ import getOrders from "../../utilities/orderFetches"
 function Admin() {
   const [productCount, setProductCount] = useState(0)
   const [orders, setOrders] = useState([])
-  useEffect(() => {
-    getProducts().then((data) => setProductCount(data.length))
-  }, [])
 
   useEffect(() => {
     getOrders().then((data) => setOrders(data))
