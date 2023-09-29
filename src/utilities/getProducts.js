@@ -3,6 +3,5 @@ export default async function getProducts() {
     import.meta.env.VITE_SERVER_URL + "/api/products"
   )
   const data = await response.json()
-  console.log(data)
   return data
 }

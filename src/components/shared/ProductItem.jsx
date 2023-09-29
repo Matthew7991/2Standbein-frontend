@@ -7,8 +7,6 @@ function ProductItem({ product, isAdmin }) {
   const shoppingCartState = useContext(ShoppingCart)
   const reloadContext = useContext(Reloading)
 
-  console.log(product)
-
   const toggleEditing = () => {
     setEditing((prev) => !prev)
   }
@@ -40,6 +38,13 @@ function ProductItem({ product, isAdmin }) {
     console.log(shoppingCartState.shoppingCart)
   }
 
+  const deleteProduct = async () => {
+    const response = await fetch(
+      import.meta.env.VITE_SERVER_URL + "/api/products/" + product._id,
+      { method: "DELETE" }
+    )
+    if (response.ok) reloadContext.setReload((prev) => !prev)
+  }
   return (
     <article
       key={product._id}
@@ -52,11 +57,11 @@ function ProductItem({ product, isAdmin }) {
         />
       ) : (
         <div className="flex items-start ">
-          <div className="">
+          <div>
             <img
               src={product.imgUrl}
               alt=""
-              className="object-contain h-40"
+              className="object-contain w-full h-40 max-h-min"
             />
           </div>
           <div className="flex-1">
@@ -71,22 +76,32 @@ function ProductItem({ product, isAdmin }) {
             </p>
             <div className="flex gap-4">
               <p className="text-2xl font-bold">{product.price} €</p>
-              <button
-                className="bg-[#ffe81e] rounded-full px-8 py-1 text-2xl font-medium"
-                onClick={addToCart}>
-                Add to Cart
-              </button>
+              {product.stock > 0 && (
+                <button
+                  className={`bg-[#ffe81e] rounded-full px-8 py-1 text-2xl font-medium`}
+                  onClick={addToCart}>
+                  Add to Cart
+                </button>
+              )}
             </div>
           </div>
         </div>
       )}
       {isAdmin && (
-        <button
-          className="px-8 py-1 text-2xl font-medium text-white bg-red-700 rounded-full "
-          type="button"
-          onClick={toggleEditing}>
-          {editing ? "Cancel" : "Edit"}
-        </button>
+        <div className="flex gap-4">
+          <button
+            className="px-8 py-1 text-2xl font-medium text-white bg-red-700 rounded-full "
+            type="button"
+            onClick={toggleEditing}>
+            {editing ? "Cancel" : "Edit"}
+          </button>
+          <button
+            className="px-8 py-1 text-2xl font-medium text-white bg-red-700 rounded-full"
+            type="button"
+            onClick={deleteProduct}>
+            Delete
+          </button>
+        </div>
       )}
     </article>
   )
